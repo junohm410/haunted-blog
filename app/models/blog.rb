@@ -9,7 +9,7 @@ class Blog < ApplicationRecord
 
   scope :published, -> { where('secret = FALSE') }
 
-  scope :unpublished, -> { where('secret = TRUE') }
+  scope :accessible, ->(current_user) { published.or(where(user: current_user)) }
 
   scope :search, lambda { |term|
     sanitized_term = ActiveRecord::Base.sanitize_sql_like(term.to_s)
